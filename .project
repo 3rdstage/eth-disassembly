@@ -20,4 +20,15 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 	</natures>
+	<filteredResources>
+		<filter>
+			<id>1611760706126</id>
+			<name></name>
+			<type>26</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-projectRelativePath-matches-false-false-run/mongodb/data</arguments>
+			</matcher>
+		</filter>
+	</filteredResources>
 </projectDescription>
