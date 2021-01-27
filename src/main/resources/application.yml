@@ -1,0 +1,80 @@
+# https://docs.spring.io/spring-boot/docs/2.2.x/reference/html/appendix-application-properties.html
+
+debug: !!bool ${SPRING_DEBUG:false}
+trace: !!bool ${SPRING_TRACE:false}
+
+logging.level:
+  org.springframework.boot.autoconfigure: WARN
+  org.hibernate.SQL: WARN
+  org.hibernate.type: WARN
+
+server:
+  port: 8080
+
+spring:
+  application.name: foo-bar
+  profiles:
+    active: local
+  main.allow-bean-definition-overriding: false
+  output:
+    ansi:
+      enabled: always  # https://docs.spring.io/spring-boot/docs/2.1.x/reference/html/boot-features-logging.html#boot-features-logging-color-coded-output
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+spring.aop:
+  auto: true  # Add @EnableAspectJAutoProxy.
+  proxy-target-class: true  # Whether subclass-based (CGLIB) proxies are to be created (true), as opposed to standard Java interface-based proxies (false).
+
+spring.security:
+  user:
+    name: boot
+    password: boot
+
+ethereum:
+  client:
+    protocol: 'https'
+    host: mainnet.infura.io/v3/${INFURA_PROJECT_ID}
+    chain-id: 1
+
+
+---
+spring.profiles: local
+
+debug: !!bool ${SPRING_DEBUG:false}
+trace: !!bool ${SPRING_TRACE:false}
+
+logging.level:
+  org.hibernate.SQL: DEBUG
+  org.hibernate.type: TRACE
+  # https://cloud.spring.io/spring-cloud-static/spring-cloud-openfeign/2.2.3.RELEASE/reference/html/#feign-logging
+
+
+spring:
+  autoconfigure:
+    exclude[0]: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+    exclude[1]: org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
+  jackson.serialization.INDENT_OUTPUT: true
+
+spring.jpa:
+  properties.hibernate:
+    show_sql: true
+    format_sql: true
+    use_sql_comments: true
+
+# https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-endpoints-enabling-endpoints
+management.endpoints:
+  enabled-by-default: true
+  shutdown.enabled: false
+  web.exposure.include: "*"
+  jmx.exposure.include: "*"
+  jmx.exposure.exclude:
+
+resttemplate:
+  base:
+    url: http://localhost:8080
+    
+    
+    
