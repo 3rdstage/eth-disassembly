@@ -4,9 +4,14 @@ debug: !!bool ${SPRING_DEBUG:false}
 trace: !!bool ${SPRING_TRACE:false}
 
 logging.level:
+  org.springframework: INFO
   org.springframework.boot.autoconfigure: WARN
+  org.apache.tomcat: INFO
+  org.apache.catalina: INFO
+  org.eclipse.jetty: INFO
   org.hibernate.SQL: WARN
   org.hibernate.type: WARN
+  org.hibernate.tool.hbm2ddl: TRACE
 
 server:
   port: 8080
@@ -18,7 +23,7 @@ spring:
   main.allow-bean-definition-overriding: false
   output:
     ansi:
-      enabled: always  # https://docs.spring.io/spring-boot/docs/2.1.x/reference/html/boot-features-logging.html#boot-features-logging-color-coded-output
+      enabled: ALWAYS  # https://docs.spring.io/spring-boot/docs/2.1.x/reference/html/boot-features-logging.html#boot-features-logging-color-coded-output
   servlet:
     multipart:
       max-file-size: 100MB
@@ -76,5 +81,9 @@ resttemplate:
   base:
     url: http://localhost:8080
     
-    
-    
+spring.data.mongodb:
+  host: 127.0.0.1
+  port: 27017
+  username: admin
+  password: use2mongo
+  authentication-database: admin
