@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.HashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.validation.constraints.Positive;
 import org.bson.Document;
@@ -33,11 +34,20 @@ public class TransactionExtractor{
   @Autowired
   private MongoClient mongo;
 
+
+  private MongoCollection<Document> ethTransferCollection = null;
+
+
+  @PostConstruct
+  public void postConstruct() {
+
+    //MongoDatabase and MongoCollection are both 'thread-safe' classes
+    this.ethTransferCollection = this.mongo.getDatabase("eth").getCollection("etherTransfers");
+  }
+
+
   public void extractTransactions(@Positive final long fromNo, @Positive final long toNo)
     throws Exception{
-
-    final MongoDatabase db = this.mongo.getDatabase("eth");
-    final MongoCollection<Document> clltn = db.getCollection("etherTransfers");
 
     BigInteger cnt = null;
     for(long i = fromNo; i < toNo; i++) {
@@ -58,7 +68,7 @@ public class TransactionExtractor{
               .append("toAddr", tr.getTo())
               .append("value", tr.getValueRaw());
 
-          clltn.insertOne(doc);
+          this.ethTransferCollection.insertOne(doc);
         });
       }
     }
