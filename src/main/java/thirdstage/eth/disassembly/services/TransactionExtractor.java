@@ -34,6 +34,8 @@ public class TransactionExtractor{
   @Autowired
   private MongoClient mongo;
 
+  @Autowired
+  private AccountService acctService;
 
   private MongoCollection<Document> ethTransferCollection = null;
 
@@ -61,15 +63,21 @@ public class TransactionExtractor{
         final Optional<Transaction> tx = this.web3j.ethGetTransactionByBlockNumberAndIndex(
             new DefaultBlockParameterNumber(i), BigInteger.valueOf(j)).send().getTransaction();
 
-        tx.ifPresent(tr -> {
-          Document doc = new Document("blockNo", tr.getBlockNumber().longValue())
-              .append("txIndex", tr.getTransactionIndex().longValue())
-              .append("fromAddr", tr.getFrom())
-              .append("toAddr", tr.getTo())
-              .append("value", tr.getValueRaw());
+        if(!tx.isPresent()) {
+          this.logger.warn("Can't find a transaction - block #: {}, tx index: {}", i, j);
+          continue;
+        }
 
-          this.ethTransferCollection.insertOne(doc);
-        });
+        final boolean fromContr = this.acctService.isContractAccount(tx.get().getFrom());
+        final boolean toContr = this.acctService.isContractAccount(tx.get().getTo());
+
+        Document doc = new Document("blockNo", tx.get().getBlockNumber().longValue())
+            .append("txIndex", tx.get().getTransactionIndex().longValue())
+            .append("fromAddr", tx.get().getFrom())
+            .append("toAddr", tx.get().getTo())
+            .append("value", tx.get().getValueRaw());
+
+        this.ethTransferCollection.insertOne(doc);
       }
     }
 

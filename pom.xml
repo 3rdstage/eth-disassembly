@@ -37,6 +37,7 @@
     <jsr305.version>3.0.2</jsr305.version> <!-- https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305 -->
     <validation-api.version>2.0.1.Final</validation-api.version> <!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
     <hibernate-validator.version>6.1.2.Final</hibernate-validator.version> <!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
+    <lombok.version>1.18.16</lombok.version> <!--  https://mvnrepository.com/artifact/org.projectlombok/lombok -->
     <slf4j.version>1.7.30</slf4j.version> <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
     <logback.version>1.2.3</logback.version> <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
     <janino.version>3.1.0</janino.version> <!-- https://mvnrepository.com/artifact/org.codehaus.janino/janino -->
@@ -199,6 +200,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
+      <!-- @TODO Validate 'logback-test.xml' using XML Maven plugin (https://www.mojohaus.org/xml-maven-plugin/index.html)  -->
       <plugin>
         <groupId>org.basepom.maven</groupId>
         <artifactId>duplicate-finder-maven-plugin</artifactId>
@@ -625,6 +627,12 @@
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
       <version>${hibernate-validator.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

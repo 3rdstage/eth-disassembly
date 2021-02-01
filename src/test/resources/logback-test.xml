@@ -8,14 +8,15 @@
    <property name="_LOG_FILE_NAME" value="${log.file.name:-logback}" /> <!-- excluding path and extension -->
    <property name="_LOG_TIMEZONE" value="${log.timezone:-Asia/Seoul}"/>
    <property name="_LOG_PID" value="${log.pid:-false}" />
-   <property name="_LOG_LEVEL_ROOT" value="${log.level.root:-${log.level.default:-INFO}}"/>
+   <property name="_LOG_LEVEL_ROOT" value="${log.level.root:-${log.level.default:-DEBUG}}"/>
    <property name="_LOG_LEVEL_SPRING" value="${log.level.spring:-${log.level.default:-INFO}}"/>
    <property name="_LOG_LEVEL_MYBATIS" value="${log.level.mybatis:-${log.level.default:-INFO}}"/>
-   <property name="_LOG_LEVEL_JETTY" value="${log.level.jetty:-${log.level.default:-DEBUG}}" />
+   <property name="_LOG_LEVEL_JETTY" value="${log.level.jetty:-${log.level.default:-INFO}}" />
    <property name="_LOG_LEVEL_AKKA" value="${log.level.akka:-${log.level.default:-DEBUG}}" />
    <property name="_LOG_LEVEL_AKKA_CLUSTER_HEARTBEAT" value="${log.level.akka.clusterHeartBeat:-OFF}"/>
    <property name="_LOG_LEVEL_APACHE_HTTP" value="${log.level.apache.http:-${log.level.default:-INFO}}" />
    <property name="_LOG_LEVEL_APACHE_HTTP_WIRE" value="${log.level.apache.http.wire:-${log.level.default:-DEBUG}}" />
+   <property name="_LOG_LEVEL_WEB3J" value="${log.level.web3j:-${log.level.default:-INFO}}" />
  
    <if condition='property("_LOG_PID").trim().equals("true")'>
       <then>
@@ -113,4 +114,11 @@
       <appender-ref ref="Console" />
       <appender-ref ref="DRFA" />
    </logger>
+   
+   <logger name="org.web3j" level="${_LOG_LEVEL_WEB3J}" additivity="false">
+      <appender-ref ref="Console" />
+      <appender-ref ref="DRFA" />
+   </logger>
+   
+   
 </configuration>

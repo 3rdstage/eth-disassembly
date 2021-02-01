@@ -45,11 +45,7 @@ public class AccountService{
   public boolean isContractAccount(
       @NotBlank @Pattern(regexp = "0x[0-9A-Fa-f]{1,40}") final String addr) {
 
-
-
-    return false;
-
-
+    return this.findAccount(addr).isContract();
   }
 
 
@@ -70,11 +66,11 @@ public class AccountService{
             .send()
             .getCode();
 
-        this.logger.debug(String.format("Inquired an acccount - address: %s, balance: %,d, code: %s",
+        this.logger.debug(String.format("Found an account - address: %s, balance: %,d, code: %s",
             addr, bal, StringUtils.left(code, 10)));
 
         doc = new Document("addr", addr)
-            .append("balance", bal)
+            .append("balance", bal.toString())
             .append("is_contr", !StringUtils.isBlank(code));
 
         this.acctCollection.insertOne(doc);
@@ -85,7 +81,8 @@ public class AccountService{
       }
     }
 
-    return null;
+    return new Account(doc.getString("addr"),
+        new BigInteger(doc.getString("balance")), doc.getBoolean("is_contr"));
   }
 
 }
