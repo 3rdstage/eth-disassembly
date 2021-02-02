@@ -40,7 +40,7 @@ class TransactionExtractorTest{
     long latest = this.web3j.ethBlockNumber().send().getBlockNumber().longValue();
     long from = Math.max(latest - 1_000_000L, 0L);
 
-    testee.extractTransactions(from, from + 2);
+    testee.extractTransactions(from, from + 1);
   }
 
 }

@@ -1,6 +1,7 @@
 package thirdstage.eth.disassembly.values;
 
 import java.util.List;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class Account implements java.io.Serializable{
 
   private String address;
 
-  private BigInteger balance;
+  private BigDecimal balance;
 
   private boolean isContract;
 

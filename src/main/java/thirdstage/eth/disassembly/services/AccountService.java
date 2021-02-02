@@ -1,5 +1,6 @@
 package thirdstage.eth.disassembly.services;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotBlank;
@@ -32,13 +33,14 @@ public class AccountService{
   @Autowired
   private MongoClient mongo;
 
-  MongoCollection<Document> acctCollection = null;
+
+  MongoCollection<Account> accounts;
 
   @PostConstruct
   public void postConstruct() {
 
-    this.acctCollection = this.mongo.getDatabase("eth")
-        .getCollection("accounts");
+    this.accounts = this.mongo.getDatabase("eth")
+        .getCollection("accounts", Account.class);
   }
 
 
@@ -51,9 +53,9 @@ public class AccountService{
 
   public Account findAccount(@NotBlank final String addr) {
 
-    Document doc = this.acctCollection.find(Filters.eq("addr", addr)).first();
+    Account acct = this.accounts.find(Filters.eq("addr", addr)).first();
 
-    if(doc == null) {
+    if(acct == null) {
 
       try {
         final BigInteger bal = this.web3j
@@ -69,11 +71,8 @@ public class AccountService{
         this.logger.debug(String.format("Found an account - address: %s, balance: %,d, code: %s",
             addr, bal, StringUtils.left(code, 10)));
 
-        doc = new Document("addr", addr)
-            .append("balance", bal.toString())
-            .append("is_contr", !StringUtils.isBlank(code));
-
-        this.acctCollection.insertOne(doc);
+        acct = new Account(addr, new BigDecimal(bal), StringUtils.isBlank(code) || StringUtils.equals(code, "0x"));
+        this.accounts.insertOne(acct);
 
       }catch(Throwable th) {
         this.logger.error("Fail to find or insert account data for {}", addr);
@@ -81,8 +80,7 @@ public class AccountService{
       }
     }
 
-    return new Account(doc.getString("addr"),
-        new BigInteger(doc.getString("balance")), doc.getBoolean("is_contr"));
+    return acct;
   }
 
 }
