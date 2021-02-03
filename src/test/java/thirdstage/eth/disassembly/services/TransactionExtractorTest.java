@@ -22,9 +22,7 @@ import org.web3j.protocol.Web3j;
 import thirdstage.eth.disassembly.EthereumClientConfig;
 
 
-@SpringBootTest(
-    properties = {"management.endpoints.enabled-by-default=false", "security=", "spring.security.enabled=false"},
-    webEnvironment = WebEnvironment.NONE)
+@SpringBootTest
 @TestInstance(Lifecycle.PER_CLASS)
 class TransactionExtractorTest{
 
