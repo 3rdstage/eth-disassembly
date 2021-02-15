@@ -24,7 +24,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 @Service
-public class TransactionExtractor{
+public class TransactionService{
 
   final private Logger logger = LoggerFactory.getLogger(this.getClass());
 

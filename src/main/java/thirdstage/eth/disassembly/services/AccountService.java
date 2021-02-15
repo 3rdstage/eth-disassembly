@@ -34,7 +34,7 @@ public class AccountService{
   private MongoClient mongo;
 
 
-  MongoCollection<Account> accounts;
+  private MongoCollection<Account> accounts;
 
   @PostConstruct
   public void postConstruct() {
@@ -71,7 +71,7 @@ public class AccountService{
         this.logger.debug(String.format("Found an account - address: %s, balance: %,d, code: %s",
             addr, bal, StringUtils.left(code, 10)));
 
-        acct = new Account(addr, new BigDecimal(bal), StringUtils.isBlank(code) || StringUtils.equals(code, "0x"));
+        acct = new Account(addr, new BigDecimal(bal), !StringUtils.isBlank(code) && !StringUtils.equalsAnyIgnoreCase(code, "0x"));
         this.accounts.insertOne(acct);
 
       }catch(Throwable th) {

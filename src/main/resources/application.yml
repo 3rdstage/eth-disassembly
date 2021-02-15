@@ -84,6 +84,6 @@ resttemplate:
 spring.data.mongodb:
   host: 127.0.0.1
   port: 27017
-  username: admin
-  password: use2mongo
-  authentication-database: admin
+  username: ${MONGODB_USER}
+  password: ${MONGODB_PASSWORD}
+  authentication-database: ${MONGODB_AUTH_DATABASE}

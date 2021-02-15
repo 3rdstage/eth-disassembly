@@ -33,7 +33,7 @@
     <checkstyle.skip>true</checkstyle.skip>
     <dependencies.release.updatePolicy>never</dependencies.release.updatePolicy> <!-- always | daily | never -->
     <!-- versions for Java SDK and dependencies -->
-    <java.version>1.9</java.version>
+    <java.version>10</java.version>
     <jsr305.version>3.0.2</jsr305.version> <!-- https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305 -->
     <validation-api.version>2.0.1.Final</validation-api.version> <!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
     <hibernate-validator.version>6.1.2.Final</hibernate-validator.version> <!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
@@ -53,8 +53,9 @@
     <springfox-swagger2.version>2.9.2</springfox-swagger2.version> <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
     <mybatis.version>3.5.1</mybatis.version> <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
     <jjwt.version>0.10.7</jjwt.version> <!-- https://mvnrepository.com/artifact/io.jsonwebtoken -->
-    <web3j.version>4.5.17</web3j.version> <!-- https://mvnrepository.com/artifact/org.web3j -->
+    <web3j.version>4.6.4</web3j.version> <!-- https://mvnrepository.com/artifact/org.web3j -->
     <okhttp.version>4.3.1</okhttp.version> <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3 -->
+    <mongodb-driver.version>4.2.0</mongodb-driver.version> <!-- https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync -->
     <!-- versions for Maven plugins -->
     <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version> <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-enforcer-plugin -->
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version> <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
@@ -735,6 +736,25 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-mongodb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-mongodb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mongodb</groupId>
+      <artifactId>mongodb-driver-sync</artifactId>
+      <version>${mongodb-driver.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mongodb</groupId>
+      <artifactId>mongodb-driver-core</artifactId>
+      <version>${mongodb-driver.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mongodb</groupId>
+      <artifactId>bson</artifactId>
+      <version>${mongodb-driver.version}</version>
     </dependency>
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
