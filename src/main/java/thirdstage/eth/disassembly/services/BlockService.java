@@ -31,19 +31,7 @@ public class BlockService{
   private Web3j web3j;
 
   @Autowired
-  private MongoClient mongo;
-
-  @Autowired
   private BlockRepository blockRepo;
-
-  private MongoCollection<Block> blocks;
-
-  @PostConstruct
-  public void postConstruct() {
-    this.blocks = this.mongo.getDatabase("eth")
-        .getCollection("blocks", Block.class);
-  }
-
 
   public void extractBlock(@PositiveOrZero final long no) throws Exception{
 
@@ -51,7 +39,6 @@ public class BlockService{
         new DefaultBlockParameterNumber(no), false).send().getBlock();
 
     this.blockRepo.save(Block.fromWeb3jBlock(blk));
-    //this.blocks.insertOne(Block.fromWeb3jBlock(blk));
   }
 
 

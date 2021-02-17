@@ -29,6 +29,7 @@ import thirdstage.support.spring.data.mongodb.EpochTimeToDateConverter;
  * @author 3rdstage
  *
  * @see <tt><a href='https://github.com/spring-projects/spring-data-mongodb/blob/3.1.3/spring-data-mongodb/src/main/java/org/springframework/data/mongodb/config/AbstractMongoClientConfiguration.java'>AbstractMongoClientConfiguration.java</a></tt>
+ * @see <tt><a href='https://github.com/spring-projects/spring-data-mongodb/blob/3.1.3/spring-data-mongodb/src/main/java/org/springframework/data/mongodb/config/MongoConfigurationSupport.java'>MongoConfigurationSupport.java</a></tt>
  */
 @Configuration
 @EnableMongoRepositories

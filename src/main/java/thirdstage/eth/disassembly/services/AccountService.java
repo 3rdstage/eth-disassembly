@@ -2,10 +2,12 @@ package thirdstage.eth.disassembly.services;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -18,6 +20,7 @@ import org.web3j.protocol.core.DefaultBlockParameterName;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import thirdstage.eth.disassembly.repos.AccountRepository;
 import thirdstage.eth.disassembly.values.Account;
 
 @Service
@@ -25,62 +28,45 @@ public class AccountService{
 
   final private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
   @Autowired
   private Web3j web3j;
 
-
   @Autowired
-  private MongoClient mongo;
-
-
-  private MongoCollection<Account> accounts;
-
-  @PostConstruct
-  public void postConstruct() {
-
-    this.accounts = this.mongo.getDatabase("eth")
-        .getCollection("accounts", Account.class);
-  }
-
+  private AccountRepository accountRepo;
 
   public boolean isContractAccount(
-      @NotBlank @Pattern(regexp = "0x[0-9A-Fa-f]{1,40}") final String addr) {
+      @NotBlank @Pattern(regexp = "0x[0-9A-Fa-f]{1,40}") final String addr){
 
     return this.findAccount(addr).isContract();
   }
 
+  public Account findAccount(@NotBlank final String addr){
 
-  public Account findAccount(@NotBlank final String addr) {
+    Validate.isTrue(StringUtils.isNotBlank(addr), "Valid address should be specified.");
 
-    Account acct = this.accounts.find(Filters.eq("addr", addr)).first();
 
-    if(acct == null) {
+    final var acct = this.accountRepo.findById(addr);
+    if(acct.isPresent()) return acct.get();
 
-      try {
-        final BigInteger bal = this.web3j
-            .ethGetBalance(addr, DefaultBlockParameterName.LATEST)
-            .send()
-            .getBalance();
+    try{
+      final BigInteger bal = this.web3j
+          .ethGetBalance(addr, DefaultBlockParameterName.LATEST).send().getBalance();
+      final String code = this.web3j
+          .ethGetCode(addr, DefaultBlockParameterName.LATEST).send().getCode();
 
-        final String code = this.web3j
-            .ethGetCode(addr, DefaultBlockParameterName.LATEST)
-            .send()
-            .getCode();
+      this.logger.debug(String.format(
+          "Found an account - address: %s, balance: %,d, code: %s", addr, bal, StringUtils.left(code, 10)));
 
-        this.logger.debug(String.format("Found an account - address: %s, balance: %,d, code: %s",
-            addr, bal, StringUtils.left(code, 10)));
+      final var acct2 = new Account(addr).setBalance(new BigDecimal(bal))
+          .setContract(!StringUtils.isBlank(code) && !StringUtils.equalsAnyIgnoreCase(code, "0x"));
 
-        acct = new Account(addr, new BigDecimal(bal), !StringUtils.isBlank(code) && !StringUtils.equalsAnyIgnoreCase(code, "0x"));
-        this.accounts.insertOne(acct);
-
-      }catch(Throwable th) {
-        this.logger.error("Fail to find or insert account data for {}", addr);
-        ExceptionUtils.wrapAndThrow(th);
-      }
+      this.accountRepo.save(acct2);
+      return acct2;
+    } catch(Throwable th){
+      this.logger.error("Fail to find or insert account data for {}", addr);
+      ExceptionUtils.wrapAndThrow(th);
+      return null;  //unreachable but to avoid compile error
     }
-
-    return acct;
   }
 
 }

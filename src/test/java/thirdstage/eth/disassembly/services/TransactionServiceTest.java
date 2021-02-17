@@ -33,12 +33,20 @@ class TransactionServiceTest{
   TransactionService testee;
 
   @Test
-  void testExtractTransactions() throws Exception{
+  void testExtractTransactionsBetweenBlocks() throws Exception{
 
     long latest = this.web3j.ethBlockNumber().send().getBlockNumber().longValue();
     long from = Math.max(latest - 1_000_000L, 0L);
 
-    testee.extractTransactions(from, from + 1);
+    testee.extractTransactionsBetweenBlocks(from, from + 1);
   }
+
+  @Test
+  void testExtractTransactionsInBlock() throws Exception{
+    long latest = this.web3j.ethBlockNumber().send().getBlockNumber().longValue();
+
+    testee.extractTransactionsInBlock(latest - 10L);
+  }
+
 
 }
