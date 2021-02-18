@@ -56,11 +56,12 @@ public class MongoClientConfig extends AbstractMongoClientConfiguration{
   // https://docs.spring.io/spring-data/mongodb/docs/3.2.x/reference/html/#mongo.custom-converters.xml
   @Override
   protected void configureConverters(MongoConverterConfigurationAdapter adapter) {
+    super.configureConverters(adapter);
     //adapter.registerConverter(new EpochTimeToDateConverter());
     //adapter.registerConverter(new EpochTimeFromDateConverter());
   }
 
-  @Bean
+  //@Bean
   public MongoClientSettingsBuilderCustomizer customizer() {
     return (builder) -> {
 

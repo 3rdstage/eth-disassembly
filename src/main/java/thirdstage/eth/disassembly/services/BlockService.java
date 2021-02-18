@@ -10,6 +10,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +35,28 @@ public class BlockService{
   @Autowired
   private BlockRepository blockRepo;
 
-  public void extractBlock(@PositiveOrZero final long no) throws Exception{
+  public Block findBlock(@PositiveOrZero final long no){
 
-    final EthBlock.Block blk = this.web3j.ethGetBlockByNumber(
-        new DefaultBlockParameterNumber(no), false).send().getBlock();
+    Validate.isTrue(no >= 0);
+    return this.blockRepo.findById(no)
+        .orElseGet(() -> this.extractBlock(no));
 
-    this.blockRepo.save(Block.fromWeb3jBlock(blk));
   }
 
+  public Block extractBlock(@PositiveOrZero final long no){
+
+    try {
+      final var blk = this.web3j.ethGetBlockByNumber(
+        new DefaultBlockParameterNumber(no), false).send().getBlock();
+
+      final var blk2 = Block.fromWeb3jBlock(blk);
+      this.blockRepo.save(blk2);
+      return blk2;
+    }catch(Throwable th) {
+      this.logger.error("Fail to extract a block for the block number of {}", no);
+      ExceptionUtils.wrapAndThrow(th);
+      return null;
+    }
+  }
 
 }

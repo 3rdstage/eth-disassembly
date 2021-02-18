@@ -1,33 +1,18 @@
 package thirdstage.eth.disassembly.services;
 
-import java.util.List;
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.Optional;
-import java.util.HashMap;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.PostConstruct;
-import javax.annotation.concurrent.ThreadSafe;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterNumber;
-import org.web3j.protocol.core.methods.response.Transaction;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import thirdstage.eth.disassembly.repos.EtherTransferRepository;
-import thirdstage.eth.disassembly.values.EtherTransfer;
-import thirdstage.utils.NumberComparisonUtils;
+import thirdstage.eth.disassembly.repos.TransactionRepository;
+import thirdstage.eth.disassembly.values.Transaction;
 
 @Service
 public class TransactionService{
@@ -38,10 +23,13 @@ public class TransactionService{
   private Web3j web3j;
 
   @Autowired
-  private EtherTransferRepository ethTransferRepo;
+  private TransactionRepository transactionRepo;
 
   @Autowired
-  private AccountService acctService;
+  private AccountService accountSrv;
+
+  @Autowired
+  private BlockService blockSrv;
 
   public void extractTransactionsBetweenBlocks(@Positive final long fromNo, @Positive final long toNo)
     throws Exception{
@@ -70,7 +58,7 @@ public class TransactionService{
   public void extractTransaction(@PositiveOrZero final long blockNo,
       @PositiveOrZero final long index){
 
-    Optional<Transaction> tx = null;
+    Optional<org.web3j.protocol.core.methods.response.Transaction> tx = null;
     try {
 
       tx = this.web3j.ethGetTransactionByBlockNumberAndIndex(
@@ -84,22 +72,22 @@ public class TransactionService{
       throw new IllegalStateException(String.format("There's no transaction in block %,d at index %,d", blockNo, index));
     }
 
-    final var fromIsContr = this.acctService.isContractAccount(tx.get().getFrom());
-    final var toIsContr = this.acctService.isContractAccount(tx.get().getTo());
+    final var fromIsContr = this.accountSrv.isContractAccount(tx.get().getFrom());
+    final var toIsContr = this.accountSrv.isContractAccount(tx.get().getTo());
+    final var blkNo = tx.get().getBlockNumber().longValue();
+    final var at = this.blockSrv.findBlock(blkNo).getAt();
 
-    if(NumberComparisonUtils.isPositive(tx.get().getValue())) {  //assume ether transfer
-
-      final var trsf = new EtherTransfer(tx.get().getHash())
-                      .setBlockNo(tx.get().getBlockNumber().longValue())
+      final var trsf = new Transaction(tx.get().getHash())
+                      .setBlockNo(blkNo)
                       .setIndex(tx.get().getTransactionIndex().longValue())
                       .setFrom(tx.get().getFrom())
                       .setFromIsContract(fromIsContr)
                       .setTo(tx.get().getTo())
                       .setToIsContract(toIsContr)
-                      .setValue(tx.get().getValue());
+                      .setValue(tx.get().getValue())
+                      .setAt(at);
 
-      this.ethTransferRepo.save(trsf);
-    }
+      this.transactionRepo.save(trsf);
   }
 
 }

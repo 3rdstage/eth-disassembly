@@ -11,9 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import thirdstage.eth.disassembly.values.Block;
-import thirdstage.eth.disassembly.values.EtherTransfer;
+import thirdstage.eth.disassembly.values.Transaction;
 
-public interface EtherTransferRepository  extends MongoRepository<EtherTransfer, String>{
+public interface TransactionRepository  extends MongoRepository<Transaction, String>{
 
 
 }

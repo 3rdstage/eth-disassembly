@@ -44,7 +44,7 @@ public class Block{
 
   //@BsonRepresentation(BsonType.DATE_TIME)
   //@Field(targetType = FieldType.DATE_TIME)
-  private Timestamp timestamp;
+  private Instant at;
 
   @Nullable
   public final static Block fromWeb3jBlock(@Nullable EthBlock.Block blk) {
@@ -53,9 +53,7 @@ public class Block{
     else{
       return new Block(blk.getNumber().longValue())
                         .setHash(blk.getHash())
-                        .setTimestamp(Timestamp.from(
-                            Instant.ofEpochSecond(
-                                blk.getTimestamp().longValue())));
+                        .setAt(Instant.ofEpochSecond(blk.getTimestamp().longValue()));
     }
   }
 
