@@ -4,9 +4,12 @@ import static org.springframework.data.mongodb.core.mapping.FieldType.DECIMAL128
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
+import org.springframework.data.annotation.AccessType;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import ch.qos.logback.core.subst.Token.Type;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +22,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Document(collection = "transactions")
 public class Transaction implements java.io.Serializable{
-
 
   @Id
   private final String hash;
@@ -43,6 +45,7 @@ public class Transaction implements java.io.Serializable{
 
   @Getter(AccessLevel.NONE)
   @Setter(AccessLevel.NONE)
+  @AccessType(AccessType.Type.FIELD)
   @Field(targetType = DECIMAL128)
   private BigDecimal value;
 
@@ -55,7 +58,7 @@ public class Transaction implements java.io.Serializable{
     return this;
   }
 
+  @Indexed
   private Instant at;
-
 
 }

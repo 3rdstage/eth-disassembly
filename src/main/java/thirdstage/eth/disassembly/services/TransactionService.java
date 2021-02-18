@@ -77,7 +77,7 @@ public class TransactionService{
     final var blkNo = tx.get().getBlockNumber().longValue();
     final var at = this.blockSrv.findBlock(blkNo).getAt();
 
-      final var trsf = new Transaction(tx.get().getHash())
+    final var trsf = new Transaction(tx.get().getHash())
                       .setBlockNo(blkNo)
                       .setIndex(tx.get().getTransactionIndex().longValue())
                       .setFrom(tx.get().getFrom())
@@ -87,7 +87,7 @@ public class TransactionService{
                       .setValue(tx.get().getValue())
                       .setAt(at);
 
-      this.transactionRepo.save(trsf);
+    this.transactionRepo.save(trsf);
   }
 
 }

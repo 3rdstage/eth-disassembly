@@ -1,26 +1,11 @@
 package thirdstage.eth.disassembly.values;
 
-import java.util.List;
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
-import org.bson.BsonType;
-import org.bson.codecs.pojo.annotations.BsonRepresentation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.web3j.protocol.core.methods.response.EthBlock;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;

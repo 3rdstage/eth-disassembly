@@ -38,7 +38,7 @@ class TransactionServiceTest{
     long latest = this.web3j.ethBlockNumber().send().getBlockNumber().longValue();
     long from = Math.max(latest - 1_000_000L, 0L);
 
-    testee.extractTransactionsBetweenBlocks(from, from + 1);
+    testee.extractTransactionsBetweenBlocks(from, from + 10);
   }
 
   @Test

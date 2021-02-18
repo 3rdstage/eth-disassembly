@@ -1,12 +1,6 @@
 package thirdstage.eth.disassembly;
 
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Convention;
@@ -22,8 +16,6 @@ import org.springframework.data.mongodb.core.convert.MongoCustomConversions.Mong
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
-import thirdstage.support.spring.data.mongodb.EpochTimeFromDateConverter;
-import thirdstage.support.spring.data.mongodb.EpochTimeToDateConverter;
 
 /**
  * @author 3rdstage
@@ -53,6 +45,11 @@ public class MongoClientConfig extends AbstractMongoClientConfiguration{
     return "thirdstage.eth.disassembly.repos";
   }
 
+  @Override
+  public boolean autoIndexCreation() {
+    return true;
+  }
+
   // https://docs.spring.io/spring-data/mongodb/docs/3.2.x/reference/html/#mongo.custom-converters.xml
   @Override
   protected void configureConverters(MongoConverterConfigurationAdapter adapter) {
@@ -79,5 +76,8 @@ public class MongoClientConfig extends AbstractMongoClientConfiguration{
       builder.codecRegistry(pojoCodecRegistry);
     };
   }
+
+
+
 
 }
