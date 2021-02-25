@@ -45,6 +45,8 @@ public class TransactionService{
     try {
       cnt = this.web3j.ethGetBlockTransactionCountByNumber(
         new DefaultBlockParameterNumber(blockNo)).send().getTransactionCount();
+
+      this.logger.info("Found {} transactions in the block {}", cnt, blockNo);
     }catch(Throwable th) {
       ExceptionUtils.wrapAndThrow(th);
     }
@@ -60,6 +62,8 @@ public class TransactionService{
 
     Optional<org.web3j.protocol.core.methods.response.Transaction> tx = null;
     try {
+
+      this.logger.debug("Extracting transaction {} from the block {}", index, blockNo);
 
       tx = this.web3j.ethGetTransactionByBlockNumberAndIndex(
         new DefaultBlockParameterNumber(blockNo), BigInteger.valueOf(index)).send().getTransaction();

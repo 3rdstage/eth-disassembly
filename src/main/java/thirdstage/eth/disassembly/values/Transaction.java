@@ -4,6 +4,7 @@ import static org.springframework.data.mongodb.core.mapping.FieldType.DECIMAL128
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import org.springframework.data.annotation.AccessType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -58,7 +59,21 @@ public class Transaction implements java.io.Serializable{
     return this;
   }
 
+  @AccessType(AccessType.Type.FIELD)
   @Indexed
   private Instant at;
+
+  @Setter(AccessLevel.NONE)
+  @AccessType(AccessType.Type.FIELD)
+  @Field("at_min")
+  @Indexed
+  private Instant atMin;
+
+  public Transaction setAt(Instant at) {
+    this.at = at;
+    if(at != null) this.atMin = at.truncatedTo(ChronoUnit.MINUTES);
+
+    return this;
+  }
 
 }
